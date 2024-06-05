@@ -4,8 +4,9 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipe
 
 app = Flask(__name__)
 
-tokenizer = AutoTokenizer.from_pretrained("bert-base-multilingual-cased")
-model = AutoModelForSequenceClassification.from_pretrained("nlptown/bert-base-multilingual-uncased-sentiment")
+model_name = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
+tokenizer = AutoTokenizer.from_pretrained(model_name,force_download=True)
+model = AutoModelForSequenceClassification.from_pretrained(model_name,force_download=True)
 sentiment_analyzer = pipeline('sentiment-analysis', model=model, tokenizer=tokenizer)
 
 
@@ -16,9 +17,9 @@ def analyze_sentiment(text):
     score = result[0]['score']
     label = result[0]['label']
     
-    if label == 'POSITIVE':
+    if label == 'positive':
         return 2
-    elif label == 'NEGATIVE':
+    elif label == 'negative':
         return 0
     else:
         return 1
